@@ -1,10 +1,13 @@
 package com.yhguo.common.bean.common;
 
+import java.util.List;
+
 public class AttributeBean {
 
     private Integer id;
     private String name;
     private String description;
+    private List<AttributeBean> children;
 
     public Integer getId() {
         return id;
@@ -28,5 +31,13 @@ public class AttributeBean {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<AttributeBean> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<AttributeBean> children) {
+        this.children = children;
     }
 }

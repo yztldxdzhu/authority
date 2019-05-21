@@ -15,42 +15,32 @@
         <result column="operator" jdbcType="VARCHAR" property="operator"/>
     </resultMap>
 
-    <resultMap id="recursionMenuMap" type="com.yhguo.dbc.entity.PomsConfigPermission">
-        <id column="id" jdbcType="SMALLINT" property="id"/>
+    <resultMap id="recursionMenuMap" type="com.yhguo.common.bean.response.PermissionResBean">
+        <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="description" jdbcType="VARCHAR" property="description"/>
         <result column="state" jdbcType="VARCHAR" property="state"/>
         <result column="icon" jdbcType="VARCHAR" property="icon"/>
-        <result column="parent_id" jdbcType="SMALLINT" property="parentId"/>
-        <!--<result column="parent_name" jdbcType="VARCHAR" property="parentName" />-->
-        <result column="sort" jdbcType="TINYINT" property="sort"/>
-        <result column="system_id" jdbcType="SMALLINT" property="systemId"/>
-        <!--<result column="system_name" jdbcType="VARCHAR" property="systemName" />-->
-        <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="parent_name" jdbcType="VARCHAR" property="parentName" />
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="system_id" jdbcType="INTEGER" property="systemId"/>
+        <result column="system_name" jdbcType="VARCHAR" property="systemName" />
+        <result column="operate_time" jdbcType="VARCHAR" property="operateTime"/>
         <result column="operator" jdbcType="VARCHAR" property="operator"/>
         <collection property="children"
-                    ofType="com.yhguo.dbc.entity.PomsConfigPermission"
+                    ofType="com.yhguo.common.bean.response.PermissionResBean"
                     javaType="list"
                     column="{parentId=id}"
                     select="subSearchPermissionList"/>
     </resultMap>
-    <resultMap id="recursionMenuMap2" type="com.yhguo.dbc.entity.PomsConfigPermission">
-        <id column="id" jdbcType="SMALLINT" property="id"/>
-        <result column="type" jdbcType="VARCHAR" property="type"/>
+    <resultMap id="recursionMenuMap2" type="com.yhguo.common.bean.common.AttributeBean">
+        <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="description" jdbcType="VARCHAR" property="description"/>
-        <result column="state" jdbcType="VARCHAR" property="state"/>
-        <result column="icon" jdbcType="VARCHAR" property="icon"/>
-        <result column="parent_id" jdbcType="SMALLINT" property="parentId"/>
-        <!--<result column="parent_name" jdbcType="VARCHAR" property="parentName" />-->
-        <result column="sort" jdbcType="TINYINT" property="sort"/>
-        <result column="system_id" jdbcType="SMALLINT" property="systemId"/>
-        <!--<result column="system_name" jdbcType="VARCHAR" property="systemName" />-->
-        <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime"/>
-        <result column="operator" jdbcType="VARCHAR" property="operator"/>
         <collection property="children"
-                    ofType="com.yhguo.dbc.entity.PomsConfigPermission"
+                    ofType="com.yhguo.common.bean.common.AttributeBean"
                     javaType="list"
                     column="{parentId=id}"
                     select="subGetPermissionList"/>
@@ -213,11 +203,11 @@
         pcp.state,
         pcp.icon,
         pcp.sort,
-        pcp.system_id AS systemId,
-        pcs.name AS systemName,
-        pcp.parent_id AS parentId,
-        pcp1.name AS parentName,
-        DATE_FORMAT(pcp.operate_time, '%Y-%m-%d %H:%i:%s') AS operateTime,
+        pcp.system_id,
+        pcs.name AS system_name,
+        pcp.parent_id,
+        pcp1.name AS parent_name,
+        DATE_FORMAT(pcp.operate_time, '%Y-%m-%d %H:%i:%s') AS operate_time,
         pcp.operator
         FROM poms_config_permission AS pcp
         LEFT JOIN poms_config_permission AS pcp1 ON pcp1.id = pcp.parent_id
@@ -252,11 +242,11 @@
         pcp.state,
         pcp.icon,
         pcp.sort,
-        pcp.system_id AS systemId,
-        pcs.name AS systemName,
-        pcp.parent_id AS parentId,
-        pcp1.name AS parentName,
-        DATE_FORMAT(pcp.operate_time, '%Y-%m-%d %H:%i:%s') AS operateTime,
+        pcp.system_id,
+        pcs.name AS system_name,
+        pcp.parent_id,
+        pcp1.name AS parent_name,
+        DATE_FORMAT(pcp.operate_time, '%Y-%m-%d %H:%i:%s') AS operate_time,
         pcp.operator
         FROM poms_config_permission AS pcp
         LEFT JOIN poms_config_permission AS pcp1 ON pcp1.id = pcp.parent_id
@@ -286,7 +276,8 @@
     <select id="getPermissionList" resultMap="recursionMenuMap2">
         SELECT
         id,
-        `name`
+        `name`,
+        description
         FROM poms_config_permission
         <where>
             <if test="systemId != null">
@@ -294,20 +285,21 @@
             </if>
             AND parent_id IS NULL
         </where>
-        ORDER BY id DESC
+        /*ORDER BY id DESC*/
     </select>
-    <select id="subGetPermissionList" resultType="com.yhguo.dbc.entity.PomsConfigPermission">
+    <select id="subGetPermissionList" resultMap="recursionMenuMap2">
         SELECT
         id,
-        `name`
+        `name`,
+        description
         FROM poms_config_permission
         <where>
             <if test="systemId != null">
                 AND system_id = #{systemId}
             </if>
-            AND pcp.parent_id = #{parentId}
+            AND parent_id = #{parentId}
         </where>
-        ORDER BY id DESC
+        /*ORDER BY id DESC*/
     </select>
 
     <insert id="addPermission">

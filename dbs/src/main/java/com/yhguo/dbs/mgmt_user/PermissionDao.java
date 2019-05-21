@@ -19,15 +19,11 @@ public class PermissionDao {
 
     /*前台页面调的接口*/
     public List<PermissionResBean> getPermissionList(Integer systemId) {
-        List<PomsConfigPermission> temp = pomsConfigPermissionMapper.getPermissionList(systemId);
-        System.out.println(temp);
-        return null;
+        return pomsConfigPermissionMapper.getPermissionList(systemId);
     }
 
     public List<PermissionResBean> searchPermissionList(PermissionReqBean permissionReqBean) {
-        List<PomsConfigPermission> temp = pomsConfigPermissionMapper.searchPermissionList(permissionReqBean);
-        System.out.println(temp);
-        return null;
+        return pomsConfigPermissionMapper.searchPermissionList(permissionReqBean);
     }
 
     public void addPermission(PermissionReqBean permissionReqBean) {

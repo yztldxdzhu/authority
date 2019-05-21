@@ -21,9 +21,9 @@ public interface PomsConfigPermissionMapper {
     int updateByPrimaryKey(PomsConfigPermission record);
 
     /*前台页面调的接口*/
-    List<PomsConfigPermission> getPermissionList(@Param("systemId") Integer systemId);
+    List<PermissionResBean> getPermissionList(@Param("systemId") Integer systemId);
 
-    List<PomsConfigPermission> searchPermissionList(@Param("permissionReqBean") PermissionReqBean permissionReqBean);
+    List<PermissionResBean> searchPermissionList(@Param("permissionReqBean") PermissionReqBean permissionReqBean);
 
     void addPermission(@Param("permissionReqBean") PermissionReqBean permissionReqBean);
 
