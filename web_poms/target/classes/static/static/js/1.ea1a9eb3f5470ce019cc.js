@@ -1,0 +1,2 @@
+webpackJsonp([1],{"4vgy":function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var i={render:function(){var e=this.$createElement;return(this._self._c||e)("div",[this._v("\n    permission.vue\n")])},staticRenderFns:[]};var r=t("VU/8")({name:"permission"},i,!1,function(e){t("io/T")},"data-v-16016cac",null);n.default=r.exports},"io/T":function(e,n){}});
+//# sourceMappingURL=1.ea1a9eb3f5470ce019cc.js.map

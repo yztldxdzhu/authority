@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhguo.dbc.mapper.inter.PomsConfigSystemMapper">
+  <resultMap id="BaseResultMap" type="com.yhguo.dbc.entity.PomsConfigSystem">
+    <id column="id" jdbcType="SMALLINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="disable_flag" jdbcType="BIT" property="disableFlag" />
+    <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, description, url, disable_flag, operate_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from poms_config_system
+    where id = #{id,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from poms_config_system
+    where id = #{id,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.yhguo.dbc.entity.PomsConfigSystem">
+    insert into poms_config_system (id, name, description, 
+      url, disable_flag, operate_time
+      )
+    values (#{id,jdbcType=SMALLINT}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{disableFlag,jdbcType=BIT}, #{operateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yhguo.dbc.entity.PomsConfigSystem">
+    insert into poms_config_system
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="disableFlag != null">
+        disable_flag,
+      </if>
+      <if test="operateTime != null">
+        operate_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=SMALLINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="disableFlag != null">
+        #{disableFlag,jdbcType=BIT},
+      </if>
+      <if test="operateTime != null">
+        #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yhguo.dbc.entity.PomsConfigSystem">
+    update poms_config_system
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="disableFlag != null">
+        disable_flag = #{disableFlag,jdbcType=BIT},
+      </if>
+      <if test="operateTime != null">
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yhguo.dbc.entity.PomsConfigSystem">
+    update poms_config_system
+    set name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      disable_flag = #{disableFlag,jdbcType=BIT},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <!--前台页面调的接口-->
+  <select id="getSystemAttrList" resultType="com.yhguo.common.bean.common.AttributeBean">
+    SELECT
+    id,
+    `name`,
+    description
+    FROM poms_config_system
+    <where>
+      <if test="disableFlag != null">
+        AND disable_flag  = #{disableFlag}
+      </if>
+    </where>
+  </select>
+  <select id="searchSystemList" resultType="com.yhguo.common.bean.response.SystemResBean">
+    SELECT
+    id,
+    `name`,
+    description,
+    url,
+    disable_flag AS disableFlag,
+    DATE_FORMAT(operate_time, '%Y-%m-%d %H:%i:%s') AS operateTime,
+    operator
+    FROM poms_config_system
+    <where>
+      <if test="systemReqBean.name != null and systemReqBean.name.trim() != ''">
+        AND `name` LIKE CONCAT('%', #{systemReqBean.name}, '%')
+      </if>
+      <if test="systemReqBean.disableFlag != null">
+        AND disable_flag  = #{systemReqBean.disableFlag}
+      </if>
+    </where>
+    <choose>
+      <when test="systemReqBean.orderBy != null and systemReqBean.orderBy.trim() != ''">
+        ORDER BY ${systemReqBean.orderBy} ${systemReqBean.sortType}
+      </when>
+      <otherwise>
+        ORDER BY id DESC
+      </otherwise>
+    </choose>
+  </select>
+  <insert id="addSystem">
+    INSERT INTO poms_config_system
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      `name`,
+      <if test="systemReqBean.description != null and systemReqBean.description.trim() != ''">
+        description,
+      </if>
+      url,
+      operator,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{systemReqBean.name},
+      <if test="systemReqBean.description != null and systemReqBean.description.trim() != ''">
+        #{systemReqBean.description},
+      </if>
+      #{systemReqBean.url},
+      #{systemReqBean.operator},
+    </trim>
+  </insert>
+  <update id="editSystem">
+    UPDATE poms_config_system
+    <set>
+      `name` = #{systemReqBean.name},
+      <if test="systemReqBean.description != null and systemReqBean.description.trim() != ''">
+        description = #{systemReqBean.description},
+      </if>
+      url = #{systemReqBean.url},
+    </set>
+    WHERE id = #{systemReqBean.id}
+  </update>
+  <delete id="deleteSystem">
+    DELETE FROM poms_config_system
+    WHERE id = #{systemId}
+  </delete>
+  <update id="disableSystem">
+    UPDATE poms_config_system
+    SET disable_flag = 1
+    WHERE id = #{systemId}
+  </update>
+  <update id="enableSystem">
+    UPDATE poms_config_system
+    SET disable_flag = 0
+    WHERE id = #{systemId}
+  </update>
+  <!--后台自己调的接口-->
+  <select id="checkSystemNameExist" resultType="java.lang.Integer">
+    SELECT COUNT(id)
+    FROM poms_config_system
+    WHERE `name` = #{systemName}
+    <if test="systemId != null">
+      AND id != #{systemId}
+    </if>
+  </select>
+  <select id="getSystemName" resultType="java.lang.String">
+    SELECT `name`
+    FROM poms_config_system
+    WHERE id = #{systemId}
+  </select>
+</mapper>

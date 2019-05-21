@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhguo.dbc.mapper.inter.PomsConfigRolePermissionMapper">
+  <resultMap id="BaseResultMap" type="com.yhguo.dbc.entity.PomsConfigRolePermission">
+    <id column="id" jdbcType="SMALLINT" property="id" />
+    <result column="role_id" jdbcType="SMALLINT" property="roleId" />
+    <result column="permission_id" jdbcType="SMALLINT" property="permissionId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, role_id, permission_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from poms_config_role_permission
+    where id = #{id,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from poms_config_role_permission
+    where id = #{id,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.yhguo.dbc.entity.PomsConfigRolePermission">
+    insert into poms_config_role_permission (id, role_id, permission_id
+      )
+    values (#{id,jdbcType=SMALLINT}, #{roleId,jdbcType=SMALLINT}, #{permissionId,jdbcType=SMALLINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yhguo.dbc.entity.PomsConfigRolePermission">
+    insert into poms_config_role_permission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="permissionId != null">
+        permission_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=SMALLINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=SMALLINT},
+      </if>
+      <if test="permissionId != null">
+        #{permissionId,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yhguo.dbc.entity.PomsConfigRolePermission">
+    update poms_config_role_permission
+    <set>
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=SMALLINT},
+      </if>
+      <if test="permissionId != null">
+        permission_id = #{permissionId,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yhguo.dbc.entity.PomsConfigRolePermission">
+    update poms_config_role_permission
+    set role_id = #{roleId,jdbcType=SMALLINT},
+      permission_id = #{permissionId,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+</mapper>

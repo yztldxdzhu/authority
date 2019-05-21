@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhguo.dbc.mapper.inter.PomsConfigUserRoleMapper">
+  <resultMap id="BaseResultMap" type="com.yhguo.dbc.entity.PomsConfigUserRole">
+    <id column="id" jdbcType="SMALLINT" property="id" />
+    <result column="user_id" jdbcType="SMALLINT" property="userId" />
+    <result column="role_id" jdbcType="SMALLINT" property="roleId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, role_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from poms_config_user_role
+    where id = #{id,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from poms_config_user_role
+    where id = #{id,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.yhguo.dbc.entity.PomsConfigUserRole">
+    insert into poms_config_user_role (id, user_id, role_id
+      )
+    values (#{id,jdbcType=SMALLINT}, #{userId,jdbcType=SMALLINT}, #{roleId,jdbcType=SMALLINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yhguo.dbc.entity.PomsConfigUserRole">
+    insert into poms_config_user_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=SMALLINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=SMALLINT},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yhguo.dbc.entity.PomsConfigUserRole">
+    update poms_config_user_role
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=SMALLINT},
+      </if>
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yhguo.dbc.entity.PomsConfigUserRole">
+    update poms_config_user_role
+    set user_id = #{userId,jdbcType=SMALLINT},
+      role_id = #{roleId,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <!--后台自己调的接口-->
+  <select id="getUserSystemRole" resultType="java.lang.Integer">
+    SELECT pcur.role_id
+    FROM poms_config_user_role AS pcur
+    INNER JOIN poms_config_role pcr ON pcr.id = pcur.role_id
+    WHERE pcur.user_id = #{userId}
+    AND pcr.system_id = #{systemId}
+  </select>
+  <select id="getUserSystemRoleAttrList" resultType="com.yhguo.common.bean.common.AttributeBean">
+    SELECT
+    pcur.role_id AS id,
+    pcr.name AS name
+    FROM poms_config_user_role AS pcur
+    LEFT JOIN poms_config_role AS pcr ON pcr.id = pcur.role_id
+    WHERE user_id = #{userId}
+    AND pcr.system_id = #{systemId}
+  </select>
+  <delete id="deleteUserRole">
+    DELETE FROM poms_config_user_role
+    WHERE user_id = #{userId}
+    AND role_id IN
+    <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
+      #{roleId}
+    </foreach>
+  </delete>
+  <insert id="addUserRole">
+    INSERT INTO poms_config_user_role
+    (user_id, role_id)
+    VALUES
+    <foreach collection="roleIds" item="roleId" index="index" separator="," >
+      (#{userId},#{roleId})
+    </foreach>
+  </insert>
+  <select id="checkRoleBindUser" resultType="java.lang.Integer">
+    SELECT COUNT(user_id)
+    FROM poms_config_user_role
+    WHERE role_id = #{roleId}
+  </select>
+</mapper>

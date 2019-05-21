@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhguo.dbc.mapper.inter.PomsConfigPermissionMapper">
+    <resultMap id="BaseResultMap" type="com.yhguo.dbc.entity.PomsConfigPermission">
+        <id column="id" jdbcType="SMALLINT" property="id"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="parent_id" jdbcType="SMALLINT" property="parentId"/>
+        <result column="sort" jdbcType="TINYINT" property="sort"/>
+        <result column="system_id" jdbcType="SMALLINT" property="systemId"/>
+        <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime"/>
+        <result column="operator" jdbcType="VARCHAR" property="operator"/>
+    </resultMap>
+
+    <resultMap id="recursionMenuMap" type="com.yhguo.dbc.entity.PomsConfigPermission">
+        <id column="id" jdbcType="SMALLINT" property="id"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="parent_id" jdbcType="SMALLINT" property="parentId"/>
+        <!--<result column="parent_name" jdbcType="VARCHAR" property="parentName" />-->
+        <result column="sort" jdbcType="TINYINT" property="sort"/>
+        <result column="system_id" jdbcType="SMALLINT" property="systemId"/>
+        <!--<result column="system_name" jdbcType="VARCHAR" property="systemName" />-->
+        <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime"/>
+        <result column="operator" jdbcType="VARCHAR" property="operator"/>
+        <collection property="children"
+                    ofType="com.yhguo.dbc.entity.PomsConfigPermission"
+                    javaType="list"
+                    column="{parentId=id}"
+                    select="subSearchPermissionList"/>
+    </resultMap>
+    <resultMap id="recursionMenuMap2" type="com.yhguo.dbc.entity.PomsConfigPermission">
+        <id column="id" jdbcType="SMALLINT" property="id"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="parent_id" jdbcType="SMALLINT" property="parentId"/>
+        <!--<result column="parent_name" jdbcType="VARCHAR" property="parentName" />-->
+        <result column="sort" jdbcType="TINYINT" property="sort"/>
+        <result column="system_id" jdbcType="SMALLINT" property="systemId"/>
+        <!--<result column="system_name" jdbcType="VARCHAR" property="systemName" />-->
+        <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime"/>
+        <result column="operator" jdbcType="VARCHAR" property="operator"/>
+        <collection property="children"
+                    ofType="com.yhguo.dbc.entity.PomsConfigPermission"
+                    javaType="list"
+                    column="{parentId=id}"
+                    select="subGetPermissionList"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    id, type, name, description, state, icon, parent_id, sort, system_id, operate_time, 
+    operator
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from poms_config_permission
+        where id = #{id,jdbcType=SMALLINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from poms_config_permission
+    where id = #{id,jdbcType=SMALLINT}
+  </delete>
+    <insert id="insert" parameterType="com.yhguo.dbc.entity.PomsConfigPermission">
+    insert into poms_config_permission (id, type, name, 
+      description, state, icon, 
+      parent_id, sort, system_id, 
+      operate_time, operator)
+    values (#{id,jdbcType=SMALLINT}, #{type,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=SMALLINT}, #{sort,jdbcType=TINYINT}, #{systemId,jdbcType=SMALLINT}, 
+      #{operateTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.yhguo.dbc.entity.PomsConfigPermission">
+        insert into poms_config_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="systemId != null">
+                system_id,
+            </if>
+            <if test="operateTime != null">
+                operate_time,
+            </if>
+            <if test="operator != null">
+                operator,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=SMALLINT},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=SMALLINT},
+            </if>
+            <if test="sort != null">
+                #{sort,jdbcType=TINYINT},
+            </if>
+            <if test="systemId != null">
+                #{systemId,jdbcType=SMALLINT},
+            </if>
+            <if test="operateTime != null">
+                #{operateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operator != null">
+                #{operator,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yhguo.dbc.entity.PomsConfigPermission">
+        update poms_config_permission
+        <set>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="icon != null">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=SMALLINT},
+            </if>
+            <if test="sort != null">
+                sort = #{sort,jdbcType=TINYINT},
+            </if>
+            <if test="systemId != null">
+                system_id = #{systemId,jdbcType=SMALLINT},
+            </if>
+            <if test="operateTime != null">
+                operate_time = #{operateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operator != null">
+                operator = #{operator,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=SMALLINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yhguo.dbc.entity.PomsConfigPermission">
+    update poms_config_permission
+    set type = #{type,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      icon = #{icon,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=SMALLINT},
+      sort = #{sort,jdbcType=TINYINT},
+      system_id = #{systemId,jdbcType=SMALLINT},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+    <!--前台页面调的接口-->
+    <select id="searchPermissionList" resultMap="recursionMenuMap">
+        SELECT
+        pcp.id,
+        pcp.type,
+        pcp.name,
+        pcp.description,
+        pcp.state,
+        pcp.icon,
+        pcp.sort,
+        pcp.system_id AS systemId,
+        pcs.name AS systemName,
+        pcp.parent_id AS parentId,
+        pcp1.name AS parentName,
+        DATE_FORMAT(pcp.operate_time, '%Y-%m-%d %H:%i:%s') AS operateTime,
+        pcp.operator
+        FROM poms_config_permission AS pcp
+        LEFT JOIN poms_config_permission AS pcp1 ON pcp1.id = pcp.parent_id
+        LEFT JOIN poms_config_system AS pcs ON pcs.id = pcp.system_id
+        <where>
+            <if test="permissionReqBean.name != null and permissionReqBean.name.trim() != ''">
+                AND pcp.name LIKE CONCAT('%', #{permissionReqBean.name}, '%')
+            </if>
+            <if test="permissionReqBean.type != null and permissionReqBean.type.trim() != ''">
+                AND pcp.type = #{permissionReqBean.type}
+            </if>
+            <if test="permissionReqBean.systemId != null">
+                AND pcp.system_id = #{permissionReqBean.systemId}
+            </if>
+            AND pcp.parent_id IS NULL
+        </where>
+        <choose>
+            <when test="permissionReqBean.orderBy != null and permissionReqBean.orderBy.trim() != ''">
+                ORDER BY ${permissionReqBean.orderBy} ${permissionReqBean.sortType}
+            </when>
+            <otherwise>
+                ORDER BY pcp.id DESC
+            </otherwise>
+        </choose>
+    </select>
+    <select id="subSearchPermissionList" resultMap="recursionMenuMap">
+        SELECT
+        pcp.id,
+        pcp.type,
+        pcp.name,
+        pcp.description,
+        pcp.state,
+        pcp.icon,
+        pcp.sort,
+        pcp.system_id AS systemId,
+        pcs.name AS systemName,
+        pcp.parent_id AS parentId,
+        pcp1.name AS parentName,
+        DATE_FORMAT(pcp.operate_time, '%Y-%m-%d %H:%i:%s') AS operateTime,
+        pcp.operator
+        FROM poms_config_permission AS pcp
+        LEFT JOIN poms_config_permission AS pcp1 ON pcp1.id = pcp.parent_id
+        LEFT JOIN poms_config_system AS pcs ON pcs.id = pcp.system_id
+        <where>
+            <!--<if test="permissionReqBean.name != null and permissionReqBean.name.trim() != ''">
+              AND pcp.name LIKE CONCAT('%', #{permissionReqBean.name}, '%')
+            </if>
+            <if test="permissionReqBean.type != null and permissionReqBean.type.trim() != ''">
+              AND pcp.type = #{permissionReqBean.type}
+            </if>
+            <if test="permissionReqBean.systemId != null">
+              AND pcp.system_id = #{permissionReqBean.systemId}
+            </if>-->
+            AND pcp.parent_id = #{parentId}
+        </where>
+        <!--<choose>
+          <when test="permissionReqBean.orderBy != null and permissionReqBean.orderBy.trim() != ''">
+            ORDER BY ${permissionReqBean.orderBy} ${permissionReqBean.sortType}
+          </when>
+          <otherwise>
+            ORDER BY pcp.id DESC
+          </otherwise>
+        </choose>-->
+    </select>
+
+    <select id="getPermissionList" resultMap="recursionMenuMap2">
+        SELECT
+        id,
+        `name`
+        FROM poms_config_permission
+        <where>
+            <if test="systemId != null">
+                AND system_id = #{systemId}
+            </if>
+            AND parent_id IS NULL
+        </where>
+        ORDER BY id DESC
+    </select>
+    <select id="subGetPermissionList" resultType="com.yhguo.dbc.entity.PomsConfigPermission">
+        SELECT
+        id,
+        `name`
+        FROM poms_config_permission
+        <where>
+            <if test="systemId != null">
+                AND system_id = #{systemId}
+            </if>
+            AND pcp.parent_id = #{parentId}
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <insert id="addPermission">
+        INSERT INTO poms_config_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            `type`,
+            `name`,
+            <if test="permissionReqBean.description != null and permissionReqBean.description.trim() != ''">
+                description,
+            </if>
+            <if test="permissionReqBean.state != null and permissionReqBean.state.trim() != ''">
+                state,
+            </if>
+            <if test="permissionReqBean.icon != null and permissionReqBean.icon.trim() != ''">
+                icon,
+            </if>
+            <if test="permissionReqBean.parentId != null">
+                parent_id,
+            </if>
+            <if test="permissionReqBean.sort != null">
+                sort,
+            </if>
+            system_id,
+            operator,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{permissionReqBean.type},
+            #{permissionReqBean.name},
+            <if test="permissionReqBean.description != null and permissionReqBean.description.trim() != ''">
+                #{permissionReqBean.description},
+            </if>
+            <if test="permissionReqBean.state != null and permissionReqBean.state.trim() != ''">
+                #{permissionReqBean.state},
+            </if>
+            <if test="permissionReqBean.icon != null and permissionReqBean.icon.trim() != ''">
+                #{permissionReqBean.icon},
+            </if>
+            <if test="permissionReqBean.parentId != null">
+                #{permissionReqBean.parentId},
+            </if>
+            <if test="permissionReqBean.sort != null">
+                #{permissionReqBean.sort},
+            </if>
+            #{permissionReqBean.systemId},
+            #{permissionReqBean.operator},
+        </trim>
+    </insert>
+    <update id="editPermission">
+        UPDATE poms_config_permission
+        <set>
+            `name` = #{permissionReqBean.name},
+            <if test="permissionReqBean.description != null and permissionReqBean.description.trim() != ''">
+                description = #{permissionReqBean.description},
+            </if>
+            <if test="permissionReqBean.state != null and permissionReqBean.state.trim() != ''">
+                state = #{permissionReqBean.state},
+            </if>
+            <if test="permissionReqBean.icon != null and permissionReqBean.icon.trim() != ''">
+                icon = #{permissionReqBean.icon},
+            </if>
+            <if test="permissionReqBean.parentId != null">
+                parent_id = #{permissionReqBean.parentId},
+            </if>
+            <if test="permissionReqBean.sort != null">
+                sort = #{permissionReqBean.sort},
+            </if>
+            system_id = #{permissionReqBean.systemId},
+            operator = #{permissionReqBean.operator}
+        </set>
+        WHERE id = #{permissionReqBean.id}
+    </update>
+    <delete id="deletePermission">
+    DELETE FROM poms_config_permission
+    WHERE id = #{permissionId}
+  </delete>
+    <!--后台自己调的接口-->
+    <select id="checkPermissionNameExist" resultType="java.lang.Integer">
+        SELECT COUNT(id)
+        FROM poms_config_permission
+        WHERE `name` = #{permissionName}
+        AND parent_id = #{parentId}
+        <if test="permissionId != null">
+            AND id != #{permissionId}
+        </if>
+    </select>
+</mapper>

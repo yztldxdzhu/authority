@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhguo.dbc.mapper.inter.PomsConfigRoleMapper">
+  <resultMap id="BaseResultMap" type="com.yhguo.dbc.entity.PomsConfigRole">
+    <id column="id" jdbcType="SMALLINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+    <result column="system_id" jdbcType="SMALLINT" property="systemId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, description, operate_time, system_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from poms_config_role
+    where id = #{id,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from poms_config_role
+    where id = #{id,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.yhguo.dbc.entity.PomsConfigRole">
+    insert into poms_config_role (id, name, description, 
+      operate_time, system_id)
+    values (#{id,jdbcType=SMALLINT}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{operateTime,jdbcType=TIMESTAMP}, #{systemId,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yhguo.dbc.entity.PomsConfigRole">
+    insert into poms_config_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="operateTime != null">
+        operate_time,
+      </if>
+      <if test="systemId != null">
+        system_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=SMALLINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTime != null">
+        #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="systemId != null">
+        #{systemId,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yhguo.dbc.entity.PomsConfigRole">
+    update poms_config_role
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTime != null">
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="systemId != null">
+        system_id = #{systemId,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yhguo.dbc.entity.PomsConfigRole">
+    update poms_config_role
+    set name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      system_id = #{systemId,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <!--前台页面调的接口-->
+  <select id="getRoleAttrList" resultType="com.yhguo.common.bean.common.AttributeBean">
+    SELECT
+    id,
+    `name`,
+    description
+    FROM poms_config_role
+    WHERE system_id = #{systemId}
+  </select>
+  <select id="searchRoleList" resultType="com.yhguo.common.bean.response.RoleResBean">
+    SELECT
+    pcr.id,
+    pcr.name,
+    pcr.description,
+    pcr.system_id AS systemId,
+    pcs.name AS systemName,
+    DATE_FORMAT(pcr.operate_time, '%Y-%m-%d %H:%i:%s') AS operateTime,
+    pcr.operator
+    FROM poms_config_role AS pcr
+    LEFT JOIN poms_config_system AS pcs ON pcs.id = pcr.system_id
+    <where>
+      <if test="roleReqBean.name != null and roleReqBean.name.trim() != ''">
+        AND pcr.name LIKE CONCAT('%', #{roleReqBean.name}, '%')
+      </if>
+      <if test="roleReqBean.systemId != null">
+        AND pcr.system_id = #{roleReqBean.systemId}
+      </if>
+    </where>
+    <choose>
+      <when test="roleReqBean.orderBy != null and roleReqBean.orderBy.trim() != ''">
+        ORDER BY ${roleReqBean.orderBy} ${roleReqBean.sortType}
+      </when>
+      <otherwise>
+        ORDER BY pcr.id DESC
+      </otherwise>
+    </choose>
+  </select>
+  <insert id="addRole">
+    INSERT INTO poms_config_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      `name`,
+      <if test="roleReqBean.description != null and roleReqBean.description.trim() != ''">
+        description,
+      </if>
+      system_id,
+      operator,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{roleReqBean.name},
+      <if test="roleReqBean.description != null and roleReqBean.description.trim() != ''">
+        #{roleReqBean.description},
+      </if>
+      #{roleReqBean.systemId},
+      #{roleReqBean.operator},
+    </trim>
+  </insert>
+  <update id="editRole">
+    UPDATE poms_config_role
+    <set>
+      `name` = #{roleReqBean.name},
+      <if test="roleReqBean.description != null and roleReqBean.description.trim() != ''">
+        description = #{roleReqBean.description},
+      </if>
+      system_id = #{roleReqBean.systemId},
+      operator = #{roleReqBean.operator}
+    </set>
+    WHERE id = #{roleReqBean.id}
+  </update>
+  <delete id="deleteRole">
+    DELETE FROM poms_config_role
+    WHERE id = #{roleId}
+  </delete>
+  <!--后台自己调的接口-->
+  <select id="checkRoleNameExist" resultType="java.lang.Integer">
+    SELECT COUNT(id)
+    FROM poms_config_role
+    WHERE `name` = #{roleName}
+    AND system_id = #{systemId}
+    <if test="roleId != null">
+      AND id != #{roleId}
+    </if>
+  </select>
+</mapper>

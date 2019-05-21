@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yhguo.dbc.mapper.inter.PomsConfigUserMapper">
+  <resultMap id="BaseResultMap" type="com.yhguo.dbc.entity.PomsConfigUser">
+    <id column="id" jdbcType="SMALLINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="disable_flag" jdbcType="BIT" property="disableFlag" />
+    <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, password, disable_flag, operate_time, last_login_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from poms_config_user
+    where id = #{id,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from poms_config_user
+    where id = #{id,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.yhguo.dbc.entity.PomsConfigUser">
+    insert into poms_config_user (id, name, password, 
+      disable_flag, operate_time, last_login_time
+      )
+    values (#{id,jdbcType=SMALLINT}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{disableFlag,jdbcType=BIT}, #{operateTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yhguo.dbc.entity.PomsConfigUser"
+          useGeneratedKeys="true" keyProperty="id">
+    insert into poms_config_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="disableFlag != null">
+        disable_flag,
+      </if>
+      <if test="operateTime != null">
+        operate_time,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=SMALLINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="disableFlag != null">
+        #{disableFlag,jdbcType=BIT},
+      </if>
+      <if test="operateTime != null">
+        #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yhguo.dbc.entity.PomsConfigUser">
+    update poms_config_user
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="disableFlag != null">
+        disable_flag = #{disableFlag,jdbcType=BIT},
+      </if>
+      <if test="operateTime != null">
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yhguo.dbc.entity.PomsConfigUser">
+    update poms_config_user
+    set name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      disable_flag = #{disableFlag,jdbcType=BIT},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <!--前台页面调的接口-->
+  <select id="searchUserList" resultType="com.yhguo.common.bean.response.UserResBean">
+    SELECT
+    id,
+    `name`,
+    password,
+    disable_flag AS disableFlag,
+    DATE_FORMAT(operate_time, '%Y-%m-%d %H:%i:%s') AS operateTime,
+    operator,
+    DATE_FORMAT(last_login_time, '%Y-%m-%d %H:%i:%s') AS lastLoginTime
+    FROM poms_config_user
+    <where>
+      <if test="userReqBean.name != null and userReqBean.name.trim() != ''">
+        AND `name` LIKE CONCAT('%', #{userReqBean.name}, '%')
+      </if>
+      <if test="userReqBean.disableFlag != null">
+        AND disable_flag  = #{userReqBean.disableFlag}
+      </if>
+    </where>
+    <choose>
+      <when test="userReqBean.orderBy != null and userReqBean.orderBy.trim() != ''">
+        ORDER BY ${userReqBean.orderBy} ${userReqBean.sortType}
+      </when>
+      <otherwise>
+        ORDER BY id DESC
+      </otherwise>
+    </choose>
+  </select>
+  <insert id="addUser" keyProperty="id" useGeneratedKeys="true">
+    INSERT INTO poms_config_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      `name`,
+      password,
+      operator,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{userReqBean.name},
+      #{userReqBean.password},
+      #{userReqBean.operator},
+    </trim>
+  </insert>
+  <update id="editUser">
+    UPDATE poms_config_user
+    <set>
+      `name` = #{userReqBean.name},
+      password = #{userReqBean.password},
+      operator = #{userReqBean.operator},
+    </set>
+    WHERE id = #{userReqBean.id}
+  </update>
+  <delete id="deleteUser">
+    DELETE FROM poms_config_user
+    WHERE id = #{userId}
+  </delete>
+  <update id="disableUser">
+    UPDATE poms_config_user
+    SET disable_flag = 1
+    WHERE id = #{userId}
+  </update>
+  <update id="enableUser">
+    UPDATE poms_config_user
+    SET disable_flag = 0
+    WHERE id = #{userId}
+  </update>
+  <!--后台自己调的接口-->
+  <select id="checkUserNameExist" resultType="java.lang.Integer">
+    SELECT COUNT(id)
+    FROM poms_config_user
+    WHERE `name` = #{userName}
+    <if test="userId != null">
+      AND id != #{userId}
+    </if>
+  </select>
+</mapper>
