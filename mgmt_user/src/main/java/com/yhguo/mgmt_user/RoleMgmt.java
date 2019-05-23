@@ -9,17 +9,25 @@ import com.yhguo.common.bean.response.RoleResBean;
 import com.yhguo.common.framework.EnumResultStatus;
 import com.yhguo.common.framework.ResultObject;
 import com.yhguo.dbs.mgmt_user.RoleDao;
+import com.yhguo.dbs.mgmt_user.RolePermissionDao;
 import com.yhguo.dbs.mgmt_user.UserRoleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
+
+import static com.yhguo.common.tool.IntegerArray.substract;
 
 @Component
 public class RoleMgmt {
 
     @Autowired
     private RoleDao roleDao;
+
+    @Autowired
+    private RolePermissionDao rolePermissionDao;
 
     @Autowired
     private UserRoleDao userRoleDao;
@@ -43,6 +51,12 @@ public class RoleMgmt {
         try {
             PageHelper.startPage(pageInfoBean.getCurrentPage(), pageInfoBean.getPageSize(), true);
             List<RoleResBean> list = roleDao.searchRoleList(roleReqBean);
+
+            for(RoleResBean role : list){
+                List<AttributeBean> permissionAttrList = rolePermissionDao.getRolePermissionAttrList(role.getId());
+                role.setPermissions(permissionAttrList);
+            }
+
             PageInfo pageInfo = new PageInfo(list);
             resultObject.setStatus(EnumResultStatus.SUCCESS);
             resultObject.setData(pageInfo);
@@ -54,6 +68,7 @@ public class RoleMgmt {
         return resultObject;
     }
 
+    @Transactional
     public ResultObject addRole(RoleReqBean roleReqBean) {
         ResultObject resultObject = new ResultObject();
         try {
@@ -62,13 +77,20 @@ public class RoleMgmt {
             boolean roleNameExistFlag = roleDao.checkRoleNameExist(roleName, systemId, null);
             if (roleNameExistFlag) {
                 resultObject.setStatus(EnumResultStatus.FAILURE);
-                resultObject.setMessage("添加角色失败：角色名称重复");
+                resultObject.setMessage("添加角色失败：同一系统角色名称重复");
                 return resultObject;
             }
-            roleDao.addRole(roleReqBean);
+            // 1. 添加角色表
+            int roleId = roleDao.addRole(roleReqBean);
+            // 2. 添加角色权限关系表
+            Integer[] permissionIds = roleReqBean.getPermissionIds();
+            if(permissionIds.length > 0){
+                rolePermissionDao.addRolePermission(roleId, permissionIds);
+            }
             resultObject.setStatus(EnumResultStatus.SUCCESS);
             resultObject.setMessage("添加角色成功！");
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             e.printStackTrace();
             resultObject.setStatus(EnumResultStatus.FAILURE);
             resultObject.setMessage("添加角色失败，失败原因：" + e.getMessage());
@@ -76,6 +98,7 @@ public class RoleMgmt {
         return resultObject;
     }
 
+    @Transactional
     public ResultObject editRole(RoleReqBean roleReqBean) {
         ResultObject resultObject = new ResultObject();
         try {
@@ -85,13 +108,29 @@ public class RoleMgmt {
             boolean roleNameExistFlag = roleDao.checkRoleNameExist(roleName, systemId, roleId);
             if (roleNameExistFlag) {
                 resultObject.setStatus(EnumResultStatus.FAILURE);
-                resultObject.setMessage("编辑角色失败：角色名称重复");
+                resultObject.setMessage("编辑角色失败：同一系统角色名称重复");
                 return resultObject;
             }
+            // 1. 更新角色表
             roleDao.editRole(roleReqBean);
+            // 2. 更新角色权限关系表
+            Integer[] oldPermissionIds = rolePermissionDao.getRolePermission(roleId);
+            Integer[] permissionIds = roleReqBean.getPermissionIds();
+
+            Integer[] deletePermissionIds = substract(oldPermissionIds, permissionIds);
+            Integer[] addPermissionIds = substract(permissionIds, oldPermissionIds);
+
+            if(deletePermissionIds.length > 0){
+                rolePermissionDao.deleteRolePermission(roleId, deletePermissionIds);
+            }
+            if(addPermissionIds.length > 0) {
+                rolePermissionDao.addRolePermission(roleId, addPermissionIds);
+            }
+
             resultObject.setStatus(EnumResultStatus.SUCCESS);
             resultObject.setMessage("编辑角色成功！");
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             e.printStackTrace();
             resultObject.setStatus(EnumResultStatus.FAILURE);
             resultObject.setMessage("编辑角色失败，失败原因：" + e.getMessage());

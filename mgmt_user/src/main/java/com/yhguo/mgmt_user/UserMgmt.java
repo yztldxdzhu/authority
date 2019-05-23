@@ -57,7 +57,6 @@ public class UserMgmt {
                 user.setRoles(roles);
             }
 
-
             PageInfo pageInfo = new PageInfo(list);
             resultObject.setStatus(EnumResultStatus.SUCCESS);
             resultObject.setData(pageInfo);
@@ -115,14 +114,17 @@ public class UserMgmt {
             // 2. 更新用户角色管理关系表
             Integer[] oldRoleIds = userRoleDao.getUserSystemRole(userId, userReqBean.getSystemId());
             Integer[] roleIds = userReqBean.getRoleIds();
+
             Integer[] deleteRoleIds = substract(oldRoleIds, roleIds);
             Integer[] addRoleIds = substract(roleIds, oldRoleIds);
+
             if (deleteRoleIds.length > 0) {
                 userRoleDao.deleteUserRole(userId, deleteRoleIds);
             }
             if (addRoleIds.length > 0) {
                 userRoleDao.addUserRole(userId, addRoleIds);
             }
+
             resultObject.setStatus(EnumResultStatus.SUCCESS);
             resultObject.setMessage("编辑用户成功！");
         } catch (Exception e) {

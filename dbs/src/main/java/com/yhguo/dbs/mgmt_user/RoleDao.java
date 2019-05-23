@@ -3,6 +3,7 @@ package com.yhguo.dbs.mgmt_user;
 import com.yhguo.common.bean.common.AttributeBean;
 import com.yhguo.common.bean.request.RoleReqBean;
 import com.yhguo.common.bean.response.RoleResBean;
+import com.yhguo.dbc.entity.PomsConfigRole;
 import com.yhguo.dbc.mapper.inter.PomsConfigRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,8 +25,15 @@ public class RoleDao {
         return pomsConfigRoleMapper.searchRoleList(roleReqBean);
     }
 
-    public void addRole(RoleReqBean roleReqBean) {
-        pomsConfigRoleMapper.addRole(roleReqBean);
+    public int addRole(RoleReqBean roleReqBean) {
+        // 这里必须要用实体类
+        PomsConfigRole role = new PomsConfigRole();
+        role.setName(roleReqBean.getName());
+        role.setDescription(roleReqBean.getDescription());
+        role.setSystemId(roleReqBean.getSystemId().shortValue());
+        pomsConfigRoleMapper.insertSelective(role);
+        return role.getId();
+        // pomsConfigRoleMapper.addRole(roleReqBean);
     }
 
     public void editRole(RoleReqBean roleReqBean) {

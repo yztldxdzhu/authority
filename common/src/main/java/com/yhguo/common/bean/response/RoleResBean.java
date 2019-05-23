@@ -1,5 +1,9 @@
 package com.yhguo.common.bean.response;
 
+import com.yhguo.common.bean.common.AttributeBean;
+
+import java.util.List;
+
 public class RoleResBean {
 
     private Integer id;
@@ -7,6 +11,7 @@ public class RoleResBean {
     private String description;
     private Integer systemId;
     private String systemName;
+    private List<AttributeBean> permissions;
     private String operateTime;
     private String operator;
 
@@ -48,6 +53,14 @@ public class RoleResBean {
 
     public void setSystemName(String systemName) {
         this.systemName = systemName;
+    }
+
+    public List<AttributeBean> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<AttributeBean> permissions) {
+        this.permissions = permissions;
     }
 
     public String getOperateTime() {

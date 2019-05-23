@@ -22,12 +22,12 @@ public class UserRoleDao {
         return pomsConfigUserRoleMapper.getUserSystemRole(userId, systemId);
     }
 
-    public void deleteUserRole(Integer userId, Integer[] roleIds) {
-        pomsConfigUserRoleMapper.deleteUserRole(userId, roleIds);
-    }
-
     public void addUserRole(Integer userId, Integer[] roleIds) {
         pomsConfigUserRoleMapper.addUserRole(userId, roleIds);
+    }
+
+    public void deleteUserRole(Integer userId, Integer[] roleIds) {
+        pomsConfigUserRoleMapper.deleteUserRole(userId, roleIds);
     }
 
     public boolean checkRoleBindUser(Integer roleId) {

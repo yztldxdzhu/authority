@@ -68,4 +68,34 @@
       permission_id = #{permissionId,jdbcType=SMALLINT}
     where id = #{id,jdbcType=SMALLINT}
   </update>
+  <!--后台自己调的接口-->
+  <select id="getRolePermissionAttrList" resultType="com.yhguo.common.bean.common.AttributeBean">
+    SELECT
+    pcrp.permission_id AS id,
+    pcp.name
+    FROM poms_config_role_permission AS pcrp
+    LEFT JOIN poms_config_permission AS pcp ON pcp.id = pcrp.permission_id
+    WHERE pcrp.role_id = #{roleId}
+  </select>
+  <select id="getRolePermission" resultType="java.lang.Integer">
+    SELECT permission_id
+    FROM poms_config_role_permission
+    WHERE role_id = #{roleId}
+  </select>
+  <insert id="addRolePermission">
+    INSERT INTO poms_config_role_permission
+    (role_id, permission_id)
+    VALUES
+    <foreach collection="permissionIds" item="permissionId" index="index" separator="," >
+      (#{roleId}, #{permissionId})
+    </foreach>
+  </insert>
+  <delete id="deleteRolePermission">
+    DELETE FROM poms_config_role_permission
+    WHERE role_id = #{roleId}
+    AND permission_id IN
+    <foreach collection="permissionIds" item="permissionId" open="(" separator="," close=")">
+      #{permissionId}
+    </foreach>
+  </delete>
 </mapper>

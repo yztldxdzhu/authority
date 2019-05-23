@@ -8,6 +8,7 @@ public class RoleReqBean extends PageInfoBean {
     private String name;
     private String description;
     private Integer systemId;
+    private Integer[] permissionIds;
     private String operator;
 
     public Integer getId() {
@@ -40,6 +41,14 @@ public class RoleReqBean extends PageInfoBean {
 
     public void setSystemId(Integer systemId) {
         this.systemId = systemId;
+    }
+
+    public Integer[] getPermissionIds() {
+        return permissionIds;
+    }
+
+    public void setPermissionIds(Integer[] permissionIds) {
+        this.permissionIds = permissionIds;
     }
 
     public String getOperator() {

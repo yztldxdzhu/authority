@@ -85,14 +85,6 @@
     WHERE user_id = #{userId}
     AND pcr.system_id = #{systemId}
   </select>
-  <delete id="deleteUserRole">
-    DELETE FROM poms_config_user_role
-    WHERE user_id = #{userId}
-    AND role_id IN
-    <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
-      #{roleId}
-    </foreach>
-  </delete>
   <insert id="addUserRole">
     INSERT INTO poms_config_user_role
     (user_id, role_id)
@@ -101,6 +93,14 @@
       (#{userId},#{roleId})
     </foreach>
   </insert>
+  <delete id="deleteUserRole">
+    DELETE FROM poms_config_user_role
+    WHERE user_id = #{userId}
+    AND role_id IN
+    <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
+      #{roleId}
+    </foreach>
+  </delete>
   <select id="checkRoleBindUser" resultType="java.lang.Integer">
     SELECT COUNT(user_id)
     FROM poms_config_user_role
