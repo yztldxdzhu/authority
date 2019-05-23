@@ -1,5 +1,6 @@
 package com.yhguo.dbc.mapper.inter;
 
+import com.yhguo.common.bean.common.AttributeBean;
 import com.yhguo.common.bean.request.PermissionReqBean;
 import com.yhguo.common.bean.response.PermissionResBean;
 import com.yhguo.dbc.entity.PomsConfigPermission;
@@ -21,7 +22,7 @@ public interface PomsConfigPermissionMapper {
     int updateByPrimaryKey(PomsConfigPermission record);
 
     /*前台页面调的接口*/
-    List<PermissionResBean> getPermissionList(@Param("systemId") Integer systemId);
+    List<AttributeBean> getPermissionAttrList(@Param("systemId") Integer systemId);
 
     List<PermissionResBean> searchPermissionList(@Param("permissionReqBean") PermissionReqBean permissionReqBean);
 

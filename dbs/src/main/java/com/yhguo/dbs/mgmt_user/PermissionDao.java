@@ -18,8 +18,8 @@ public class PermissionDao {
     private PomsConfigPermissionMapper pomsConfigPermissionMapper;
 
     /*前台页面调的接口*/
-    public List<PermissionResBean> getPermissionList(Integer systemId) {
-        return pomsConfigPermissionMapper.getPermissionList(systemId);
+    public List<AttributeBean> getPermissionAttrList(Integer systemId) {
+        return pomsConfigPermissionMapper.getPermissionAttrList(systemId);
     }
 
     public List<PermissionResBean> searchPermissionList(PermissionReqBean permissionReqBean) {

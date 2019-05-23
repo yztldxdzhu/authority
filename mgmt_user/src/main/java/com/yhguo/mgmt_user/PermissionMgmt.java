@@ -21,10 +21,10 @@ public class PermissionMgmt {
     private PermissionDao permissionDao;
 
     // 不分页
-    public ResultObject getPermissionList(Integer systemId) {
+    public ResultObject getPermissionAttrList(Integer systemId) {
         ResultObject resultObject = new ResultObject();
         try {
-            List<PermissionResBean> list = permissionDao.getPermissionList(systemId);
+            List<AttributeBean> list = permissionDao.getPermissionAttrList(systemId);
             resultObject.setStatus(EnumResultStatus.SUCCESS);
             resultObject.setData(list);
         } catch (Exception e) {

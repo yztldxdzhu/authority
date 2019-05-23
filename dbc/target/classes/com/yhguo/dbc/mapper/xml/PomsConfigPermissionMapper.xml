@@ -43,7 +43,7 @@
                     ofType="com.yhguo.common.bean.common.AttributeBean"
                     javaType="list"
                     column="{parentId=id}"
-                    select="subGetPermissionList"/>
+                    select="subGetPermissionAttrList"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -273,7 +273,7 @@
         </choose>-->
     </select>
 
-    <select id="getPermissionList" resultMap="recursionMenuMap2">
+    <select id="getPermissionAttrList" resultMap="recursionMenuMap2">
         SELECT
         id,
         `name`,
@@ -287,7 +287,7 @@
         </where>
         /*ORDER BY id DESC*/
     </select>
-    <select id="subGetPermissionList" resultMap="recursionMenuMap2">
+    <select id="subGetPermissionAttrList" resultMap="recursionMenuMap2">
         SELECT
         id,
         `name`,

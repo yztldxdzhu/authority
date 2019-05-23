@@ -14,8 +14,8 @@ public class PermissionServiceImpl implements PermissionService {
     @Autowired
     private PermissionMgmt permissionMgmt;
 
-    public ResultObject getPermissionList(Integer systemId){
-        return permissionMgmt.getPermissionList(systemId);
+    public ResultObject getPermissionAttrList(Integer systemId){
+        return permissionMgmt.getPermissionAttrList(systemId);
     }
 
     public ResultObject searchPermissionList(PermissionReqBean permissionReqBean, PageInfoBean pageInfoBean) {

@@ -6,7 +6,7 @@ import com.yhguo.common.framework.ResultObject;
 
 public interface PermissionService {
 
-    ResultObject getPermissionList(Integer systemId);
+    ResultObject getPermissionAttrList(Integer systemId);
     ResultObject searchPermissionList(PermissionReqBean permissionReqBean, PageInfoBean pageInfoBean);
     ResultObject addPermission(PermissionReqBean permissionReqBean);
     ResultObject editPermission(PermissionReqBean permissionReqBean);

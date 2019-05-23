@@ -17,9 +17,9 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
-    @GetMapping("/getPermissionList")
-    public ResultObject getPermissionList(Integer systemId){
-        return permissionService.getPermissionList(systemId);
+    @GetMapping("/getPermissionAttrList")
+    public ResultObject getPermissionAttrList(Integer systemId){
+        return permissionService.getPermissionAttrList(systemId);
     }
 
     @GetMapping("/searchPermissionList")
