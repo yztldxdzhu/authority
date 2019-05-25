@@ -5,10 +5,7 @@ import com.yhguo.common.bean.request.UserReqBean;
 import com.yhguo.common.framework.ResultObject;
 import com.yhguo.web_poms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/poms/user")
@@ -23,13 +20,13 @@ public class UserController {
     }
 
     @PostMapping("/addUser")
-    public ResultObject addUser(UserReqBean userReqBean) {
+    public ResultObject addUser(@RequestBody UserReqBean userReqBean) {
         userReqBean.setOperator("yhguo");
         return userService.addUser(userReqBean);
     }
 
     @PostMapping("/editUser")
-    public ResultObject editUser(UserReqBean userReqBean) {
+    public ResultObject editUser(@RequestBody UserReqBean userReqBean) {
         userReqBean.setOperator("yhguo");
         return userService.editUser(userReqBean);
     }

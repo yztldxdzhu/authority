@@ -29,13 +29,13 @@ public class RoleController {
     }
 
     @PostMapping("/addRole")
-    public ResultObject addRole(RoleReqBean roleReqBean) {
+    public ResultObject addRole(@RequestBody RoleReqBean roleReqBean) {
         roleReqBean.setOperator("yhguo");
         return roleService.addRole(roleReqBean);
     }
 
     @PostMapping("/editRole")
-    public ResultObject editRole(RoleReqBean roleReqBean) {
+    public ResultObject editRole(@RequestBody RoleReqBean roleReqBean) {
         roleReqBean.setOperator("yhguo");
         return roleService.editRole(roleReqBean);
     }
@@ -43,6 +43,13 @@ public class RoleController {
     @PostMapping("/deleteRole")
     public ResultObject deleteRole(Integer roleId) {
         return roleService.deleteRole(roleId);
+    }
+
+
+
+    @PostMapping("/test")
+    public ResultObject test(@RequestBody RoleReqBean roleReqBean){
+        return null;
     }
 
 }
