@@ -69,11 +69,7 @@
             <scope>provided</scope>
         </dependency>-->
 
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <version>2.0.2.RELEASE</version>
-        </dependency>-->
+
 
         <!--<dependency>
             <groupId>com.google.code.gson</groupId>
@@ -87,6 +83,20 @@
             <version>1.10.2</version>
         </dependency>-->
 
+
+        <!--Spring Boot中使用crypto进行解密-->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
+        <!--后台安全方案待定-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>2.0.2.RELEASE</version>
+        </dependency>
+
         <!--模块引用-->
         <dependency>
             <groupId>com.yhguo</groupId>
@@ -99,11 +109,11 @@
             <artifactId>mgmt_user</artifactId>
             <version>${com.yhguo.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.vaadin.external.google</groupId>
             <artifactId>android-json</artifactId>
             <version>0.0.20131108.vaadin1</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <build>

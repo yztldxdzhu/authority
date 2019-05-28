@@ -4,12 +4,8 @@ import com.yhguo.common.bean.common.PageInfoBean;
 import com.yhguo.common.bean.request.RoleReqBean;
 import com.yhguo.common.framework.ResultObject;
 import com.yhguo.web_poms.service.RoleService;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/poms/role")

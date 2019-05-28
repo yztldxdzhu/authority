@@ -14,6 +14,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("/login")
+    public ResultObject login(String username, String password) {
+        return userService.login(username, password);
+    }
+
     @GetMapping("/searchUserList")
     public ResultObject searchUserList(UserReqBean userReqBean, PageInfoBean pageInfoBean) {
         return userService.searchUserList(userReqBean, pageInfoBean);

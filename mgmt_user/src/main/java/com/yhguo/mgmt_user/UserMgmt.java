@@ -177,4 +177,8 @@ public class UserMgmt {
         }
         return resultObject;
     }
+
+    public boolean checkLoginUserNameExist(String username){
+        return userDao.checkUserNameExist(username, null);
+    }
 }
