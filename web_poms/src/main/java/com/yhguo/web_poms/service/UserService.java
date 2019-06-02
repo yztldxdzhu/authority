@@ -6,6 +6,7 @@ import com.yhguo.common.framework.ResultObject;
 
 public interface UserService {
 
+    ResultObject checkLoginUserNameExist(String username);
     ResultObject login(String username, String passwordAES);
     ResultObject searchUserList(UserReqBean userReqBean, PageInfoBean pageInfoBean);
     ResultObject addUser(UserReqBean userReqBean);

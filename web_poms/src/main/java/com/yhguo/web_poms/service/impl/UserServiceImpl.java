@@ -6,23 +6,59 @@ import com.yhguo.common.framework.EnumResultStatus;
 import com.yhguo.common.framework.ResultObject;
 import com.yhguo.common.tool.AesEncryptUtil;
 import com.yhguo.mgmt_user.UserMgmt;
+import com.yhguo.web_poms.security.JwtUserDetails;
 import com.yhguo.web_poms.service.UserService;
+import com.yhguo.web_poms.util.JwtTokenUtil;
+import com.yhguo.web_poms.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
+    private AuthenticationManager authenticationManager;
+
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Autowired
     private UserMgmt userMgmt;
+
+    public ResultObject checkLoginUserNameExist(String username) {
+        ResultObject resultObject = new ResultObject();
+        boolean userNameExistFlag = userMgmt.checkLoginUserNameExist(username);
+        if (!userNameExistFlag) {
+            resultObject.setStatus(EnumResultStatus.FAILURE);
+            resultObject.setMessage("用户名不存在！");
+        } else {
+            resultObject.setStatus(EnumResultStatus.SUCCESS);
+        }
+        return resultObject;
+    }
 
     public ResultObject login(String username, String passwordAES) throws AuthenticationException {
         ResultObject resultObject = new ResultObject();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String password = null;
-        password = AesEncryptUtil.decrypt(passwordAES);
+        password = AesEncryptUtil.decrypt(passwordAES); // 解密
+
         if (username == null || passwordAES == null) {
             resultObject.setStatus(EnumResultStatus.FAILURE);
             resultObject.setMessage("用户名，密码不能为空！");
@@ -30,33 +66,36 @@ public class UserServiceImpl implements UserService {
         }
 
         boolean userNameExistFlag = userMgmt.checkLoginUserNameExist(username);
-        if(!userNameExistFlag){
+        if (!userNameExistFlag) {
             resultObject.setStatus(EnumResultStatus.FAILURE);
-            resultObject.setMessage("用户名不存在，请重试！");
+            resultObject.setMessage("用户名不存在！");
+            return resultObject;
+        }
+
+        if (!encoder.matches(password, userMgmt.getUserPassword(username))) {
+            resultObject.setStatus(EnumResultStatus.FAILURE);
+            resultObject.setMessage("密码输入不正确！");
             return resultObject;
         }
 
 
-
-
-
-      if(!encoder.matches(password,userMapper.selectPasswordByUsername(username))) {
-            return new RetResult(RetCode.FAIL.getCode(), "密码输入不正确，请重试");
-        }
-
-
-
-        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
-        final Authentication authentication = authenticationManager.authenticate(upToken);
+        UsernamePasswordAuthenticationToken usernameAndPasswordToken = new UsernamePasswordAuthenticationToken(username, password);
+        final Authentication authentication = authenticationManager.authenticate(usernameAndPasswordToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        JwtUser userDetails = (JwtUser)userDetailsService.loadUserByUsername(username);
+
+
+        JwtUserDetails userDetails = (JwtUserDetails) userDetailsService.loadUserByUsername(username);
         long refreshPeriodTime = 240L;
         String jwt = jwtTokenUtil.generateToken(userDetails);
-        String userId = userMapper.selectUserByUsername(username).getId();
+        Integer userId = userMgmt.getUserId(username);
         //把签发的jwt token存储到redis中，时间根绝你免登录的时间来设置
-        redisUtil.setAndTime(userId,jwt,refreshPeriodTime);
-        return new RetResult(RetCode.SUCCESS.getCode(),"登录成功",jwt);
+        redisUtil.setAndTime(userId.toString(), jwt, refreshPeriodTime);
+        resultObject.setStatus(EnumResultStatus.SUCCESS);
+        resultObject.setMessage("登录成功！");
+        resultObject.setData(jwt);
+        return resultObject;
     }
+
 
     public ResultObject searchUserList(UserReqBean userReqBean, PageInfoBean pageInfoBean) {
         return userMgmt.searchUserList(userReqBean, pageInfoBean);

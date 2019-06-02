@@ -178,7 +178,34 @@ public class UserMgmt {
         return resultObject;
     }
 
+    /* 用户登陆的名字是否存在 */
     public boolean checkLoginUserNameExist(String username){
         return userDao.checkUserNameExist(username, null);
+    }
+
+    public String getUserPassword(String username) {
+        return userDao.getUserPassword(username);
+    }
+
+    public UserResBean getUserInfo(String username){
+        UserResBean user = userDao.getUserInfo(username);
+        List<AttributeBean> systemAttrList = systemDao.getSystemAttrList(0);
+        List<Map> roles = new ArrayList<>();
+        for (AttributeBean sys : systemAttrList) {
+            Map<String, Object> map = new HashMap<>();
+            List<AttributeBean> userSystemRoleAttrList = userRoleDao.getUserSystemRoleAttrList(user.getId(), sys.getId());
+            if(userSystemRoleAttrList.size() > 0){
+                map.put("systemId", sys.getId());
+                map.put("systemName", sys.getName());
+                map.put("roleInfos", userSystemRoleAttrList);
+                roles.add(map);
+            }
+        }
+        user.setRoles(roles);
+        return user;
+    }
+
+    public Integer getUserId(String username) {
+        return userDao.getUserId(username);
     }
 }

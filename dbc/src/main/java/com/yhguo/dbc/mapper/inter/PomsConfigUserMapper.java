@@ -35,4 +35,11 @@ public interface PomsConfigUserMapper {
 
     /*后台自己调的接口*/
     int checkUserNameExist(@Param("userName") String userName, @Param("userId") Integer userId);
+
+    String getUserPassword(@Param("userName") String userName);
+
+    Integer getUserId(@Param("userName") String userName);
+
+    UserResBean getUserInfo(@Param("userName") String userName);
+
 }

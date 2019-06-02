@@ -55,4 +55,17 @@ public class UserDao {
         return count > 0;
     }
 
+    public String getUserPassword(String userName) {
+        return pomsConfigUserMapper.getUserPassword(userName);
+    }
+
+    public Integer getUserId(String userName) {
+        return pomsConfigUserMapper.getUserId(userName);
+    }
+
+    public UserResBean getUserInfo(String userName) {
+        return pomsConfigUserMapper.getUserInfo(userName);
+    }
+
+
 }

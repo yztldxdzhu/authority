@@ -183,4 +183,17 @@
       AND id != #{userId}
     </if>
   </select>
+  <select id="getUserPassword" resultType="java.lang.String">
+    SELECT password
+    FROM poms_config_user
+    WHERE `name` = #{userName}
+  </select>
+  <select id="getUserId" resultType="java.lang.Integer">
+    SELECT id
+    FROM poms_config_user
+    WHERE `name` = #{userName}
+  </select>
+  <select id="getUserInfo" resultType="com.yhguo.common.bean.response.UserResBean">
+    SELECT
+  </select>
 </mapper>
