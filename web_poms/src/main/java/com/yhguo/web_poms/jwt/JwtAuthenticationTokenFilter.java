@@ -1,9 +1,8 @@
-package com.yhguo.web_poms.security;
+package com.yhguo.web_poms.jwt;
 
 import com.alibaba.fastjson.JSON;
 import com.yhguo.common.framework.EnumResultStatus;
 import com.yhguo.common.framework.ResultObject;
-import com.yhguo.web_poms.util.JwtTokenUtil;
 import com.yhguo.web_poms.util.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;

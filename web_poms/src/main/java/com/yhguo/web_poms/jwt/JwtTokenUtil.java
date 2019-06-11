@@ -1,8 +1,8 @@
-package com.yhguo.web_poms.util;
+package com.yhguo.web_poms.jwt;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yhguo.web_poms.security.JwtUserDetails;
+import com.yhguo.web_poms.jwt.JwtUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.DefaultHeader;
 import io.jsonwebtoken.impl.DefaultJwsHeader;

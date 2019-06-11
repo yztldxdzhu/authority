@@ -1,4 +1,4 @@
-package com.yhguo.web_poms.security;
+package com.yhguo.web_poms.jwt;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;

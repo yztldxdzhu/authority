@@ -1,8 +1,8 @@
-package com.yhguo.web_poms.security;
+package com.yhguo.web_poms.jwt;
 
 import com.yhguo.common.bean.response.UserResBean;
 import com.yhguo.mgmt_user.UserMgmt;
-import com.yhguo.web_poms.security.JwtUserDetails;
+import com.yhguo.web_poms.jwt.JwtUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
