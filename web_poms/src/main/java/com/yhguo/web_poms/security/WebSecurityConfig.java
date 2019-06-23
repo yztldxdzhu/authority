@@ -65,11 +65,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     // 注意在Spring Security5.x中我们要显式注入AuthenticationManager不然会报错
-    /*@Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }*/
+    }
 
 
     /**
@@ -91,27 +91,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 // authorizeRequests()配置路径拦截，表明路径访问所对应的权限，角色，认证信息。
                 .authorizeRequests()
-                    .antMatchers("/poms/system/**").permitAll()
-                    .antMatchers("/poms/role/**").permitAll()
-                    .antMatchers("/poms/permission/**").permitAll()
-                    .antMatchers("/poms/user/**").permitAll()
-                    .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')")
-                    .anyRequest().authenticated()
+                    //.antMatchers("/poms/system/**").permitAll()
+                    //.antMatchers("/poms/role/**").permitAll()
+                    //.antMatchers("/poms/permission/**").permitAll()
+                    //.antMatchers("/poms/user/**").permitAll()
+                    //.antMatchers("/admin/**").hasRole("ADMIN")
+                    //.antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')")
+                    .anyRequest()
+                    .authenticated()
                     .and()
                 // formLogin()对应表单认证相关的配置
                 .formLogin()
                     .usernameParameter("username")
                     .passwordParameter("password")
-                    .failureForwardUrl("/login?error")
-                    .loginPage("/login")
+                    //.failureForwardUrl("/login?error")
+                    //.loginPage("/login")
                     .loginProcessingUrl("/poms/user/login")
+                    .successHandler(new MyAuthenticationSuccessHandler())
+                    .failureHandler(new MyAuthenticationFailureHandler())
                     .permitAll()
                     .and()
                 // logout()对应了注销相关的配置
                 .logout()
                     .logoutUrl("/poms/user/logout")
-                    .logoutSuccessUrl("/index")
+                    //.logoutSuccessUrl("/index")
                     .invalidateHttpSession(true)
                     .clearAuthentication(true)
                     .permitAll()

@@ -70,9 +70,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             e.printStackTrace();
             Map<String, Object> map = jwtTokenUtil.parseJwtPayload(jwtHeader);
             Integer userId = (Integer) map.get("userId");
+
+
             //这里的方案是如果令牌过期了，先去判断redis中存储的令牌是否过期，如果过期就重新登录，如果redis中存储的没有过期就可以
             //继续生成token返回给前端存储方式key:userId,value:令牌
             String redisResult = redisUtil.get(userId.toString());
+
+
             String username = (String) map.get("sub");
             if (StringUtils.isNoneEmpty(redisResult)) {
                 MyUserDetails myUserDetails = new MyUserDetails();
@@ -83,9 +87,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 claims.put("userId", myUserDetails.getUserId());
                 claims.put("created", new Date());
                 String token = jwtTokenUtil.generateToken(myUserDetails);
+
+
                 //更新redis中的token
                 //首先获取key的有效期，把新的token的有效期设为旧的token剩余的有效期
                 redisUtil.setAndTime(userId.toString(), token, redisUtil.getExpireTime(userId.toString()));
+
+
                 if (token != null && StringUtils.isNotEmpty(token)) {
                     jwtTokenUtil.validateToken(token);//验证令牌
                     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

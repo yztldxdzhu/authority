@@ -122,8 +122,12 @@ public class UserServiceImpl implements UserService {
         long refreshPeriodTime = 240L;
         String token = jwtTokenUtil.generateToken(userDetails);
         Integer userId = userMgmt.getUserId(username);
+
+
         // 把签发的jwt token存储到redis中，时间根据你免登录的时间来设置
         redisUtil.setAndTime(userId.toString(), token, refreshPeriodTime);
+
+
         resultObject.setStatus(EnumResultStatus.SUCCESS);
         resultObject.setMessage("登录成功！");
         // 把 token 返回给前台
