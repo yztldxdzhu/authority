@@ -18,8 +18,17 @@ public class GlobalConfig {
     @Value("${systemImgPath}")
     private String systemImgPath;
 
+    // tomcat 不活跃超时时间
     @Value("${inActiveTimeMin}")
     private int inActiveTimeMin;
+
+    // 用户密码加密密钥
+    @Value("${secureKey}")
+    private String secureKey;
+
+    // 用户密码加密密钥偏移量
+    @Value("${secureIv}")
+    private String secureIv;
 
     public String getHttpUrlPrefix() {
         return httpUrlPrefix;
@@ -43,5 +52,21 @@ public class GlobalConfig {
 
     public void setInActiveTimeMin(int inActiveTimeMin) {
         this.inActiveTimeMin = inActiveTimeMin;
+    }
+
+    public String getSecureKey() {
+        return secureKey;
+    }
+
+    public void setSecureKey(String secureKey) {
+        this.secureKey = secureKey;
+    }
+
+    public String getSecureIv() {
+        return secureIv;
+    }
+
+    public void setSecureIv(String secureIv) {
+        this.secureIv = secureIv;
     }
 }

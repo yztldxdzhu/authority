@@ -1,7 +1,10 @@
 package com.yhguo.web_poms.security;
 
+import com.yhguo.common.encryption.AesCoder;
+import com.yhguo.mgmt_user.UserMgmt;
 import com.yhguo.web_poms.jwt.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -21,12 +24,15 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import javax.sql.DataSource;
+
 
 /**
  * @EnableWebSecurity 注解使得SpringMVC集成了Spring Security的web安全支持。
  * 另外，WebSecurityConfig配置类同时集成了WebSecurityConfigurerAdapter，重写了其中的特定方法，用于自定义Spring Security配置。
  * 整个Spring Security的工作量，其实都是集中在该配置类，
  */
+@Configurable
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -35,24 +41,58 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     // 自定义认证token拦截器
-    @Autowired
-    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    /*@Autowired
+    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;*/
 
     //自定义无权限访问拦截器
-    @Autowired
-    private MyAccessDeniedHandler myAccessDeniedHandler;
+    /*@Autowired
+    private MyAccessDeniedHandler myAccessDeniedHandler;*/
 
     @Autowired
+    DataSource dataSource;
+
+    @Autowired
+    private UserMgmt userMgmt;
+
+    @Autowired
+    AesCoder aesCoder;
+
+
+    @Autowired
+    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
+
+        MyDaoAuthenticationProvider prov = new MyDaoAuthenticationProvider();
+        prov.setUserDetailsService(userDetailsService);
+        prov.setUserMgmt(userMgmt);
+        prov.setAesCoder(aesCoder);
+        auth.authenticationProvider(prov);
+        try {
+            auth.userDetailsService(userDetailsService).passwordEncoder(new PasswordEncoder() {
+                @Override
+                public String encode(CharSequence charSequence) {
+                    return null;
+                }
+                @Override
+                public boolean matches(CharSequence charSequence, String s) {
+                    return false;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*@Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
-    }
+    }*/
 
-    @Bean
+    /*@Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    }*/
 
-    @Bean
+   /* @Bean
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -62,14 +102,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         corsConfiguration.addAllowedMethod("*");
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
-    }
+    }*/
 
     // 注意在Spring Security5.x中我们要显式注入AuthenticationManager不然会报错
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    /*@Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
+    }*/
 
 
     /**
@@ -86,7 +126,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().cacheControl().disable();
 
         // 关闭 csrf 攻击
-        http.csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.csrf().disable(); //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http
                 // authorizeRequests()配置路径拦截，表明路径访问所对应的权限，角色，认证信息。
@@ -117,7 +157,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     //.logoutSuccessUrl("/index")
                     .invalidateHttpSession(true)
                     .clearAuthentication(true)
+                    .logoutSuccessHandler(new MyLogoutSuccessHandler())
                     .permitAll()
+                    .and()
+                .exceptionHandling()
+                    .accessDeniedHandler(new MyAccessDeniedHandler())
                     .and()
                 // httpBasic()可以配置basic登录
                 .httpBasic()
@@ -174,13 +218,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          *
          *
          * */
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        /*http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling().accessDeniedHandler(myAccessDeniedHandler);
 
 
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
         // 放行所有 preflight request(预检请求)
-        registry.requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
+        registry.requestMatchers(CorsUtils::isPreFlightRequest).permitAll();*/
     }
 
 

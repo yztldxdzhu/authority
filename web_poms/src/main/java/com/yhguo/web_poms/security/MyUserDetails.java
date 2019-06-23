@@ -16,17 +16,20 @@ public class MyUserDetails implements UserDetails {
 
     private Integer state;
 
+    private String latestLoginTime;
+
     private Collection<? extends GrantedAuthority> authorities;
 
 
     public MyUserDetails() {
     }
 
-    public MyUserDetails(Integer userId, String username, String password, Integer state, Collection<? extends GrantedAuthority> authorities) {
+    public MyUserDetails(Integer userId, String username, String password, Integer state, Collection<? extends GrantedAuthority> authorities, String latestLoginTime) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.state = state;
+        this.latestLoginTime = latestLoginTime;
         this.authorities = authorities;
     }
 
@@ -62,6 +65,14 @@ public class MyUserDetails implements UserDetails {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public String getLatestLoginTime() {
+        return latestLoginTime;
+    }
+
+    public void setLatestLoginTime(String latestLoginTime) {
+        this.latestLoginTime = latestLoginTime;
     }
 
     @Override

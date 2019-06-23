@@ -187,22 +187,36 @@ public class UserMgmt {
         return userDao.getUserPassword(username);
     }
 
-    public UserResBean getUserInfo(String username){
-        UserResBean user = userDao.getUserInfo(username);
-        List<AttributeBean> systemAttrList = systemDao.getSystemAttrList(0);
-        List<Map> roles = new ArrayList<>();
-        for (AttributeBean sys : systemAttrList) {
-            Map<String, Object> map = new HashMap<>();
-            List<AttributeBean> userSystemRoleAttrList = userRoleDao.getUserSystemRoleAttrList(user.getId(), sys.getId());
-            if(userSystemRoleAttrList.size() > 0){
-                map.put("systemId", sys.getId());
-                map.put("systemName", sys.getName());
-                map.put("roleInfos", userSystemRoleAttrList);
-                roles.add(map);
+    public ResultObject getUserInfo(String username){
+        ResultObject resultObject = new ResultObject();
+        try {
+            UserResBean userResBean = userDao.getUserInfo(username);
+            if (userResBean == null) {
+                resultObject.setStatus(EnumResultStatus.FAILURE);
+                resultObject.setMessage("账号不存在!");
+                return resultObject;
             }
+            List<AttributeBean> systemAttrList = systemDao.getSystemAttrList(0);
+            List<Map> roles = new ArrayList<>();
+            for (AttributeBean sys : systemAttrList) {
+                Map<String, Object> map = new HashMap<>();
+                List<AttributeBean> userSystemRoleAttrList = userRoleDao.getUserSystemRoleAttrList(userResBean.getId(), sys.getId());
+                if(userSystemRoleAttrList.size() > 0){
+                    map.put("systemId", sys.getId());
+                    map.put("systemName", sys.getName());
+                    map.put("roleInfos", userSystemRoleAttrList);
+                    roles.add(map);
+                }
+            }
+            userResBean.setRoles(roles);
+            resultObject.setStatus(EnumResultStatus.SUCCESS);
+            resultObject.setData(userResBean);
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultObject.setStatus(EnumResultStatus.FAILURE);
+            resultObject.setMessage("获取用户信息失败，失败原因" + e.getMessage());
         }
-        user.setRoles(roles);
-        return user;
+        return resultObject;
     }
 
     public Integer getUserId(String username) {
