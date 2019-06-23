@@ -3,6 +3,7 @@ package com.yhguo.web_poms.jwt;
 import com.alibaba.fastjson.JSON;
 import com.yhguo.common.framework.EnumResultStatus;
 import com.yhguo.common.framework.ResultObject;
+import com.yhguo.web_poms.security.MyUserDetails;
 import com.yhguo.web_poms.util.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
@@ -43,14 +44,21 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException {
-        String authHeader = request.getHeader(jwtTokenUtil.getHeader());
+        // 从客户端请求中获取 http 请求头："jwtHeader" 的值，这个值就是 token 令牌
+        String jwtHeader = request.getHeader(jwtTokenUtil.getHeader());
         try {
-            if (authHeader != null && StringUtils.isNotEmpty(authHeader)) {
-                String username = jwtTokenUtil.getUsernameFromToken(authHeader);
-                jwtTokenUtil.validateToken(authHeader);//验证令牌
+            // 如果 jwtHeader 是有值的，说明已经认证过了
+            if (StringUtils.isNotEmpty(jwtHeader)) {
+                // 从 token 中获取用户名
+                String username = jwtTokenUtil.getUsernameFromToken(jwtHeader);
+                // 验证 token
+                jwtTokenUtil.validateToken(jwtHeader);
+
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    // 从数据库获取用户的信息
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                    if (jwtTokenUtil.validateToken(authHeader)) {
+                    // 验证 token 是否有效
+                    if (jwtTokenUtil.validateToken(jwtHeader, userDetails)) {
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -60,21 +68,21 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
             e.printStackTrace();
-            Map<String, Object> map = jwtTokenUtil.parseJwtPayload(authHeader);
+            Map<String, Object> map = jwtTokenUtil.parseJwtPayload(jwtHeader);
             Integer userId = (Integer) map.get("userId");
             //这里的方案是如果令牌过期了，先去判断redis中存储的令牌是否过期，如果过期就重新登录，如果redis中存储的没有过期就可以
             //继续生成token返回给前端存储方式key:userId,value:令牌
             String redisResult = redisUtil.get(userId.toString());
             String username = (String) map.get("sub");
             if (StringUtils.isNoneEmpty(redisResult)) {
-                JwtUserDetails jwtUserDetails = new JwtUserDetails();
-                jwtUserDetails.setUserId(userId);
-                jwtUserDetails.setUsername(username);
+                MyUserDetails myUserDetails = new MyUserDetails();
+                myUserDetails.setUserId(userId);
+                myUserDetails.setUsername(username);
                 Map<String, Object> claims = new HashMap<>(2);
-                claims.put("sub", jwtUserDetails.getUsername());
-                claims.put("userId", jwtUserDetails.getUserId());
+                claims.put("sub", myUserDetails.getUsername());
+                claims.put("userId", myUserDetails.getUserId());
                 claims.put("created", new Date());
-                String token = jwtTokenUtil.generateToken(jwtUserDetails);
+                String token = jwtTokenUtil.generateToken(myUserDetails);
                 //更新redis中的token
                 //首先获取key的有效期，把新的token的有效期设为旧的token剩余的有效期
                 redisUtil.setAndTime(userId.toString(), token, redisUtil.getExpireTime(userId.toString()));

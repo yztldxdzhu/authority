@@ -13,15 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class RewriteAccessDenyFilter implements AccessDeniedHandler {
+public class MyAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
-    public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
         ResultObject resultObject = new ResultObject();
         resultObject.setStatus(EnumResultStatus.FAILURE);
-        resultObject.setMessage("抱歉，您没有访问该接口的权限！");
-        httpServletResponse.setContentType("application/json;charset=utf-8");
-        httpServletResponse.setCharacterEncoding("UTF-8");
-        httpServletResponse.getWriter().write(JSON.toJSONString(resultObject));
+        resultObject.setMessage("MyAccessDeniedHandler => 抱歉，您没有访问该接口的权限！");
+        response.setContentType("application/json;charset=utf-8");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(JSON.toJSONString(resultObject));
     }
+
 }

@@ -1,4 +1,4 @@
-package com.yhguo.web_poms.jwt;
+package com.yhguo.web_poms.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class JwtUserDetails implements UserDetails {
+public class MyUserDetails implements UserDetails {
 
     private Integer userId;
 
@@ -19,10 +19,10 @@ public class JwtUserDetails implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
 
-    public JwtUserDetails() {
+    public MyUserDetails() {
     }
 
-    public JwtUserDetails(Integer userId, String username, String password, Integer state, Collection<? extends GrantedAuthority> authorities) {
+    public MyUserDetails(Integer userId, String username, String password, Integer state, Collection<? extends GrantedAuthority> authorities) {
         this.userId = userId;
         this.username = username;
         this.password = password;
