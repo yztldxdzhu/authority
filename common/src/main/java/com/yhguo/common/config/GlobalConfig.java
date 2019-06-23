@@ -18,6 +18,9 @@ public class GlobalConfig {
     @Value("${systemImgPath}")
     private String systemImgPath;
 
+    @Value("${inActiveTimeMin}")
+    private int inActiveTimeMin;
+
     public String getHttpUrlPrefix() {
         return httpUrlPrefix;
     }
@@ -32,5 +35,13 @@ public class GlobalConfig {
 
     public void setSystemImgPath(String systemImgPath) {
         this.systemImgPath = systemImgPath;
+    }
+
+    public int getInActiveTimeMin() {
+        return inActiveTimeMin;
+    }
+
+    public void setInActiveTimeMin(int inActiveTimeMin) {
+        this.inActiveTimeMin = inActiveTimeMin;
     }
 }
