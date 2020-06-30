@@ -1,3 +1,4 @@
+/*
 package com.yhguo.web_poms.security;
 
 import com.alibaba.fastjson.JSON;
@@ -27,3 +28,4 @@ public class MyAccessDeniedHandler implements AccessDeniedHandler {
     }
 
 }
+*/

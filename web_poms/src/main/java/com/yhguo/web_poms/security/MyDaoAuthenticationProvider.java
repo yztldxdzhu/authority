@@ -1,3 +1,4 @@
+/*
 package com.yhguo.web_poms.security;
 
 import com.yhguo.common.encryption.AesCoder;
@@ -76,3 +77,4 @@ public class MyDaoAuthenticationProvider extends DaoAuthenticationProvider {
 
 
 }
+*/

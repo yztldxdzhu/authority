@@ -1,3 +1,4 @@
+/*
 package com.yhguo.web_poms.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -112,3 +113,4 @@ public class MyUserDetails implements UserDetails {
         return true;
     }
 }
+*/

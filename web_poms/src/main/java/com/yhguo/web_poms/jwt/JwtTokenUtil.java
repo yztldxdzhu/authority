@@ -1,3 +1,4 @@
+/*
 package com.yhguo.web_poms.jwt;
 
 import com.alibaba.fastjson.JSONObject;
@@ -41,12 +42,14 @@ public class JwtTokenUtil implements Serializable {
 
     private static CompressionCodecResolver codecResolver = new DefaultCompressionCodecResolver();
 
-    /**
+    */
+/**
      * 从 claims （数据声明）生成 jwt token
      *
      * @param claims 数据声明
      * @return jwt token
-     */
+     *//*
+
     private String generateToken(Map<String, Object> claims) {
         Date expirationDate = new Date(System.currentTimeMillis() + expiration);
         return Jwts.builder()
@@ -56,7 +59,8 @@ public class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    /**
+    */
+/**
      * 从 userDetails 生成 jwt token
      *
      * @param userDetails 用户详情
@@ -103,7 +107,8 @@ public class JwtTokenUtil implements Serializable {
      * Header 和 Payload 串型化的算法是 Base64URL。这个算法跟 Base64 算法基本类似，但有一些小的不同：
      * JWT 作为一个令牌（token），有些场合可能会放到 URL（比如 api.example.com/?token=xxx）。
      * Base64 有三个字符+、/和=，在 URL 里面有特殊含义，所以要被替换掉：=被省略、+替换成-，/替换成_ 。这就是 Base64URL 算法。
-     */
+     *//*
+
     public String generateToken(MyUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>(2);
         claims.put("sub", userDetails.getUsername());
@@ -112,12 +117,14 @@ public class JwtTokenUtil implements Serializable {
         return generateToken(claims);
     }
 
-    /**
+    */
+/**
      * 从 jwt token 中获取 claims （数据声明）
      *
      * @param token 令牌
      * @return 数据声明
-     */
+     *//*
+
     private Claims getClaimsFromToken(String token) {
         Claims claims;
         try {
@@ -129,12 +136,14 @@ public class JwtTokenUtil implements Serializable {
     }
 
 
-    /**
+    */
+/**
      * 从 jwt token 中获取用户名
      *
      * @param token 令牌
      * @return 用户名
-     */
+     *//*
+
     public String getUsernameFromToken(String token) {
         String username;
         try {
@@ -147,12 +156,14 @@ public class JwtTokenUtil implements Serializable {
         return username;
     }
 
-    /**
+    */
+/**
      * 从 jwt token 中获取用户id
      *
      * @param token 令牌
      * @return 用户名
-     */
+     *//*
+
     public String getUserIdFromToken(String token) {
         String userId;
         try {
@@ -165,12 +176,14 @@ public class JwtTokenUtil implements Serializable {
         return userId;
     }
 
-    /**
+    */
+/**
      * 判断 jwt token 是否过期
      *
      * @param token 令牌
      * @return 是否过期
-     */
+     *//*
+
     public Boolean isTokenExpired(String token) {
         try {
             Claims claims = getClaimsFromToken(token);
@@ -182,12 +195,14 @@ public class JwtTokenUtil implements Serializable {
         }
     }
 
-    /**
+    */
+/**
      * 刷新 jwt token，即重新生成一份 jwt token
      *
      * @param token 原令牌
      * @return 新令牌
-     */
+     *//*
+
     public String refreshToken(String token) {
         String newToken;
         try {
@@ -201,12 +216,14 @@ public class JwtTokenUtil implements Serializable {
         return newToken;
     }
 
-    /**
+    */
+/**
      * 验证 jwt token
      *
      * @param token 令牌
      * @return 是否有效
-     */
+     *//*
+
     public Boolean validateToken(String token) {
         try {
             Claims claims = getClaimsFromToken(token);
@@ -223,12 +240,14 @@ public class JwtTokenUtil implements Serializable {
     }
 
 
-    /**
+    */
+/**
      * 解析 jwt token 的 Payload 内容
      *
      * @param jwtHeader http请求头部：jwtHeader
      * @return Map
-     */
+     *//*
+
     public static Map parseJwtPayload(String jwtHeader) {
         Assert.hasText(jwtHeader, "jwtHeader string argument cannot be null or empty.");
         String base64UrlEncodedHeader = null;
@@ -287,12 +306,14 @@ public class JwtTokenUtil implements Serializable {
         return map;
     }
 
-    /**
+    */
+/**
      * 从json数据中读取格式化map
      *
      * @param val 值
      * @return Map<String, Object>
-     */
+     *//*
+
     public static Map<String, Object> readValue(String val) {
         try {
             return MAPPER.readValue(val, Map.class);
@@ -301,4 +322,4 @@ public class JwtTokenUtil implements Serializable {
         }
     }
 
-}
+}*/

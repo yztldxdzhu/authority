@@ -1,3 +1,4 @@
+/*
 package com.yhguo.web_poms.security;
 
 import com.alibaba.fastjson.JSON;
@@ -24,3 +25,4 @@ public class MyAuthenticationFailureHandler implements AuthenticationFailureHand
         response.getWriter().write(JSON.toJSONString(resultObject));
     }
 }
+*/

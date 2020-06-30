@@ -1,2 +1,0 @@
-webpackJsonp([0],{"C+Ub":function(e,n){},"i/Eh":function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var r={render:function(){var e=this.$createElement;return(this._self._c||e)("div",[this._v("\n    user.vue\n")])},staticRenderFns:[]};var s=t("VU/8")({name:"user"},r,!1,function(e){t("C+Ub")},"data-v-ef8c7fc0",null);n.default=s.exports}});
-//# sourceMappingURL=0.1ed2b44893a5589f2357.js.map

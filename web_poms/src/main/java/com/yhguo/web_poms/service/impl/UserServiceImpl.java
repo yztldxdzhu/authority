@@ -6,18 +6,18 @@ import com.yhguo.common.framework.EnumResultStatus;
 import com.yhguo.common.framework.ResultObject;
 import com.yhguo.common.tool.AesEncryptUtil;
 import com.yhguo.mgmt_user.UserMgmt;
-import com.yhguo.web_poms.security.MyUserDetails;
+//import com.yhguo.web_poms.security.MyUserDetails;
 import com.yhguo.web_poms.service.UserService;
-import com.yhguo.web_poms.jwt.JwtTokenUtil;
+//import com.yhguo.web_poms.jwt.JwtTokenUtil;
 import com.yhguo.web_poms.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.authentication.AuthenticationManager;
+//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.AuthenticationException;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
      使用用户名+密码登录，同时允许用户使用邮箱+密码，手机号码+密码登录，甚至，可能允许用户使用指纹登录
      身份认证器AuthenticationManager
      * */
-    @Autowired
+    /*@Autowired
     private AuthenticationManager authenticationManager;
 
 
@@ -43,12 +43,12 @@ public class UserServiceImpl implements UserService {
     private JwtTokenUtil jwtTokenUtil;
 
     @Resource
-    private RedisUtil redisUtil;
+    private RedisUtil redisUtil;*/
 
     @Autowired
     private UserMgmt userMgmt;
 
-    public ResultObject checkLoginUserNameExist(String username) {
+    /*public ResultObject checkLoginUserNameExist(String username) {
         ResultObject resultObject = new ResultObject();
         boolean userNameExistFlag = userMgmt.checkLoginUserNameExist(username);
         if (!userNameExistFlag) {
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
         UsernamePasswordAuthenticationToken usernameAndPasswordToken = new UsernamePasswordAuthenticationToken(username, password);
 
-        /**
+        *//**
          *
          （二）Authentication 最高级别的身份/认证的抽象
          我们可以得到用户拥有的权限信息列表，密码，用户细节信息，用户身份信息，认证信息。
@@ -96,10 +96,10 @@ public class UserServiceImpl implements UserService {
          getCredentials() 密码信息，用户输入的密码字符串，在认证过后通常会被移除，用于保障安全。
          getDetails() 细节信息，web应用中的实现接口通常为 WebAuthenticationDetails，它记录了访问者的ip地址和sessionId的值。
          getPrincipal() 最重要的身份信息，大部分情况下返回的是UserDetails接口的实现类，也是框架中的常用接口之一。
-         * */
+         * *//*
         final Authentication authentication = authenticationManager.authenticate(usernameAndPasswordToken);
 
-        /**
+        *//**
          *
          （一）SecurityContextHolder 用于存储安全上下文信息：当前操作的用户是谁，该用户是否已经被认证，他拥有哪些角色权限…
          获取当前登录用户的姓名：
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
          UserDetails便是Spring对身份信息封装的一个接口
          *
          *
-         * */
+         * *//*
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
         // 把 token 返回给前台
         resultObject.setData(token);
         return resultObject;
-    }
+    }*/
 
 
     public ResultObject searchUserList(UserReqBean userReqBean, PageInfoBean pageInfoBean) {

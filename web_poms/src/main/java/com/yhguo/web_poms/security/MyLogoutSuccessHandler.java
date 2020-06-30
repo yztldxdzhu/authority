@@ -1,3 +1,4 @@
+/*
 package com.yhguo.web_poms.security;
 
 import com.alibaba.fastjson.JSON;
@@ -23,3 +24,4 @@ public class MyLogoutSuccessHandler implements LogoutSuccessHandler {
         response.getWriter().write(JSON.toJSONString(resultObject));
     }
 }
+*/

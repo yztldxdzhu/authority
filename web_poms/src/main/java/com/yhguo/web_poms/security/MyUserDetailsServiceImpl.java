@@ -1,3 +1,4 @@
+/*
 package com.yhguo.web_poms.security;
 
 import com.yhguo.common.bean.response.UserResBean;
@@ -30,7 +31,8 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        /*if("".equals(username)){
+        */
+/*if("".equals(username)){
             username = "yhguo";
         }
         UserResBean user = userMgmt.getUserInfo(username);
@@ -38,7 +40,8 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(String.format("'%s'.这个用户不存在！", username));
         }
 //        List<SimpleGrantedAuthority> collect = user.getRoles().stream().map(Role::getRolename).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-        return new MyUserDetails(user.getId(), user.getName(), user.getPassword(), null, null);*/
+        return new MyUserDetails(user.getId(), user.getName(), user.getPassword(), null, null);*//*
+
 
         String realUserName = username.replace("[]", "");
         // 根据用户名获取用户信息
@@ -57,3 +60,4 @@ public class MyUserDetailsServiceImpl implements UserDetailsService {
         return new MyUserDetails(userId, userName, "", null, authorities, latestLoginTime);
     }
 }
+*/
